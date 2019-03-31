@@ -18,17 +18,19 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from restaurants import views
-from api.views import RestaurantListView
+from api.views import (RestaurantList, RestaurantDetail, RestaurantUpdate, RestaurantDelete, RestaurantCreate, Register)
+from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
     path('restaurants/list/',views.restaurant_list ,name='restaurant-list'),
-    path('restaurants/favorite/',views.favorite_restaurants ,name='favorite-restaurant'),
-    path('restaurants/<int:restaurant_id>/detail/',views.restaurant_detail ,name='restaurant-detail'),
+    path('restaurants/<int:restaurant_id>/detail/',views.restaurant_detail,name='restaurant-detail'),
     path('restaurants/create/',views.restaurant_create ,name='restaurant-create'),
     path('restaurants/<int:restaurant_id>/update/',views.restaurant_update ,name='restaurant-update'),
     path('restaurants/<int:restaurant_id>/delete/',views.restaurant_delete ,name='restaurant-delete'),
+    path('restaurants/favorite/',views.favorite_restaurants ,name='favorite-restaurant'),
+
     path('restaurants/<int:restaurant_id>/favorite/',views.restaurant_favorite ,name='restaurant-favorite'),
     path('restaurants/<int:restaurant_id>/item/add/',views.item_create ,name='item-create'),
     path('signup/',views.signup ,name='signup'),
@@ -36,7 +38,13 @@ urlpatterns = [
     path('signout/',views.signout ,name='signout'),
     path('no-access/',views.no_access ,name='no-access'),
 
-    path('api/list/', RestaurantListView.as_view(), name='api-list'),
+    path('api/list', RestaurantList.as_view(), name='list'),
+    path('api/<int:restaurant_id>/update/', RestaurantUpdate.as_view(), name='update'),
+    path('api/<int:restaurant_id>/delete/', RestaurantDelete.as_view(), name='delete'),
+    path('api/<int:restaurant_id>/', RestaurantDetail.as_view(), name='detail'),
+    path('api/create/', RestaurantCreate.as_view(), name='create'),
+    path('api/login/', obtain_jwt_token),
+    path('api/register/', Register.as_view(), name='register'),
 ]
 
 if settings.DEBUG:
